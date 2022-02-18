@@ -47,7 +47,7 @@ class VaspRun:
 
 
 if __name__ == "__main__":
-    fp = "/Users/mac/PycharmProjects/Ios/proces_vaspxml/file_lib/vasprun.xml"
+    fp = "file_lib/vasprun.xml"
     vp = VaspRun(fp)
     soup = vp.soup
     # vp.track_poscar_info()
