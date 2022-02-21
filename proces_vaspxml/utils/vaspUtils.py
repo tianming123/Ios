@@ -14,20 +14,22 @@ class VaspData:
         # 临时存储原子种类的位置, 具体如何优化, 以后再优化 (未实现)
         self.atomtype_info_list = []
         self.track_poscar_info_list = pd.DataFrame()
+        # 存储position信息 格式为一三维数组
+        self.position_list = []
 
-    def __track_incar_dict(self):
+    def track_incar_dict(self):
         incar_info = self.soup.select(self.incar_info_path)
         for item in incar_info:
             self.incar_dict[item["name"]] = item.get_text().strip()
 
-    def __track_poscar_info(self):
+    def track_poscar_info(self):
         atomtype_info = self.soup.select(self.atomtype_info_path)
         a_list = []
         for item in atomtype_info:
             a_list.append(item.get_text().strip())
         self.atomtype_info_list = a_list
 
-    def __track_forces_info(self):
+    def track_forces_info(self):
         forces_strs = self.soup.select(self.forces_path)
         df = pd.DataFrame(forces_strs)
         df = df[0].str.split(expand=True)
@@ -36,9 +38,18 @@ class VaspData:
 
     def track_position(self):
         position = self.soup.select(self.position_path)
-        print(position)
+        ret = []
+        for elem in position:
+            tmp = []
+            position_info = elem.select('v')
+            for elem in position_info:
+                tmp.append(elem.get_text().strip().split())
+            ret.append(tmp)
+        self.position_list = ret
+
 
     def run(self):
-        self.__track_incar_dict()
-        self.__track_poscar_info()
-        self.__track_forces_info()
+        self.track_incar_dict()
+        self.track_poscar_info()
+        self.track_forces_info()
+        self.track_position()
