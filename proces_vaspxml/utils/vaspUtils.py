@@ -6,15 +6,18 @@ class VaspData:
     def __init__(self, vasprun_file_path):
         # SSH提取原子类型信息的路径, 可以根据以后的版本修改
         self.atomtype_info_path = "modeling > atominfo > array[name='atomtypes'] > set > rc > c"
-        self.forces_path = "modeling > calculation >  varray[name='forces'] > v"
+        self.forces_path = "modeling > calculation >  varray[name='forces']"
         self.incar_info_path = "incar > i "
         self.position_path = "calculation > structure > varray[name='positions']"
+
         self.soup = Bs(open(vasprun_file_path, encoding="utf-8"), "html.parser")
+
         self.incar_dict = {}
         # 临时存储原子种类的位置, 具体如何优化, 以后再优化 (未实现)
         self.atomtype_info_list = []
-        self.track_poscar_info_list = pd.DataFrame()
-        # 存储position信息 格式为一三维数组
+        # 存储forces信息 格式为一三维数组 50 *64*3
+        self.track_poscar_info_list = []
+        # 存储position信息 格式为一三维数组 50 *64*3
         self.position_list = []
 
     def track_incar_dict(self):
@@ -31,19 +34,23 @@ class VaspData:
 
     def track_forces_info(self):
         forces_strs = self.soup.select(self.forces_path)
-        df = pd.DataFrame(forces_strs)
-        df = df[0].str.split(expand=True)
-        df = df.astype(float)
-        self.track_poscar_info_list = df
+        ret = []
+        for elem in forces_strs:
+            tmp = []
+            forces_info = elem.select('v')
+            for e in forces_info:
+                tmp.append(e.get_text().strip().split())
+            ret.append(tmp)
+        self.track_poscar_info_list = ret
 
     def track_position(self):
-        position = self.soup.select(self.position_path)
+        position_str = self.soup.select(self.position_path)
         ret = []
-        for elem in position:
+        for elem in position_str:
             tmp = []
             position_info = elem.select('v')
-            for elem in position_info:
-                tmp.append(elem.get_text().strip().split())
+            for e in position_info:
+                tmp.append(e.get_text().strip().split())
             ret.append(tmp)
         self.position_list = ret
 
