@@ -70,7 +70,7 @@ class VaspData:
 class AtomUtils:
 
     def __init__(self):
-        self.file_path = 'element_table.xls'
+        self.file_path = '../file_lib/element_table.xls'
 
     def get_element_tables(self):
         # 爬取元素周期表
