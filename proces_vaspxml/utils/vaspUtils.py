@@ -8,6 +8,7 @@ class VaspData:
         self.atomtype_info_path = "modeling > atominfo > array[name='atomtypes'] > set > rc > c"
         self.forces_path = "modeling > calculation >  varray[name='forces'] > v"
         self.incar_info_path = "incar > i "
+        self.position_path = "calculation > structure > varray[name='positions']"
         self.soup = Bs(open(vasprun_file_path, encoding="utf-8"), "html.parser")
         self.incar_dict = {}
         # 临时存储原子种类的位置, 具体如何优化, 以后再优化 (未实现)
@@ -32,6 +33,10 @@ class VaspData:
         df = df[0].str.split(expand=True)
         df = df.astype(float)
         self.track_poscar_info_list = df
+
+    def track_position(self):
+        position = self.soup.select(self.position_path)
+        print(position)
 
     def run(self):
         self.__track_incar_dict()
