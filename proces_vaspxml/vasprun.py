@@ -19,7 +19,7 @@ incar_info_path = "incar > i "
 class VaspRun:
     def __init__(self, vasprun_file_path):
         self.vasprun_file_path = vasprun_file_path
-        self.soup = Bs(open(self.vasprun_file_path, encoding="utf-8"), "html.parser")
+        self.soup = Bs(open(self.vasprun_file_path, encoding="utf-8"), "lxml")
         self.incar_dict = {}
         # 临时存储原子种类的位置, 具体如何优化, 以后再优化 (未实现)
         self.atomtype_info_list = []
