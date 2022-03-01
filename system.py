@@ -92,7 +92,8 @@ class System():
 
       
     '''
-    def __init__(self,sourcePath,basicFuncVect=pm.basicFuncVect):
+
+    def __init__(self, sourcePath, basicFuncVect=pm.basicFuncVect):
         '''
         初始化,记录源文件路径,目录
 
@@ -191,32 +192,30 @@ class System():
 
         '''
 
-        self.sourcePath=sourcePath
-        self.dir=os.path.dirname(sourcePath)
-        self.name=self.dir
-        self.structDataDir=os.path.join(self.dir,'struct_data')
-        #self.featDir=os.path.join(self.dir,'feat')
-        #self.dfeatDir=os.path.join(self.dir,'dfeat')        
-        self.splittedDataFilePath=os.path.join(self.dir,'splitted_data.npy')
-        self.featFilePathDict={}
-        self.featFilePathDict['T']=pm.featTrainTxt
-        self.featFilePathDict['C']=os.path.join(self.dir,'feat.cbin')
-        self.featFilePathDict['F']=os.path.join(self.dir,'feat.fbin')
-        self.featFilePathDict['DC']=os.path.join(self.dir,'dfeat.cbin')
-        self.featFilePathDict['DF']=os.path.join(self.dir,'dfeat.fbin')
+        self.sourcePath = sourcePath
+        self.dir = os.path.dirname(sourcePath)
+        self.name = self.dir
+        self.structDataDir = os.path.join(self.dir, 'struct_data')
+        # self.featDir=os.path.join(self.dir,'feat')
+        # self.dfeatDir=os.path.join(self.dir,'dfeat')
+        self.splittedDataFilePath = os.path.join(self.dir, 'splitted_data.npy')
+        self.featFilePathDict = {}
+        self.featFilePathDict['T'] = pm.featTrainTxt
+        self.featFilePathDict['C'] = os.path.join(self.dir, 'feat.cbin')
+        self.featFilePathDict['F'] = os.path.join(self.dir, 'feat.fbin')
+        self.featFilePathDict['DC'] = os.path.join(self.dir, 'dfeat.cbin')
+        self.featFilePathDict['DF'] = os.path.join(self.dir, 'dfeat.fbin')
         '''
         self.featCFilePath=os.path.join(self.dir,'feat.cbin')
         self.featFortranFilePath=os.path.join(self.dir,'feat.fbin')
         self.dfeatCFilePath=os.path.join(self.dir,'dfeat.cbin')
         self.dfeatFortranFilePath=os.path.join(self.dir,'dfeat.fbin')
         '''
-        self.featInfoTxtPath=os.path.join(self.dir,'feat_info.txt')
-        self.infoForReadPath=os.path.join(self.dir,'read_info.txt')
-        self.maxNeighborInfoPath=os.path.join(self.dir,'max_neighbor_info.txt')
-        self.basicFuncVect=basicFuncVect
+        self.featInfoTxtPath = os.path.join(self.dir, 'feat_info.txt')
+        self.infoForReadPath = os.path.join(self.dir, 'read_info.txt')
+        self.maxNeighborInfoPath = os.path.join(self.dir, 'max_neighbor_info.txt')
+        self.basicFuncVect = basicFuncVect
 
-
-                    
         if not os.path.isdir(self.structDataDir):
             os.mkdir(self.structDataDir)
 
@@ -240,11 +239,6 @@ class System():
 
         self.checkEtot()
         '''
-
-
-
-
-
 
     def loadData(self):
         '''
@@ -275,22 +269,14 @@ class System():
         atomTypeSet:                      tuple对象,int, 存储了体系中所包含的所有原子种类的信息
         atomCountAsType:                  cp.array对象,int,长度和atomTypeSet一致,存储了对应的每种原子的数目的信息
         '''
-        if hasattr(self,'allPos'):
+        if hasattr(self, 'allPos'):
             return
-        
-        if os.path.isfile(self.splittedDataFilePath) and os.stat(self.splittedDataFilePath).st_mtime>os.stat(self.sourcePath).st_mtime:
+
+        if os.path.isfile(self.splittedDataFilePath) and os.stat(self.splittedDataFilePath).st_mtime > os.stat(
+                self.sourcePath).st_mtime:
             self.loadFromSplittedData()
         else:
             self.readSourceFile()
-        
-        
-
-
-        
-        
-        
-
-
 
     def checkStat(self):
         '''
@@ -325,7 +311,7 @@ class System():
         isDataSplitted:                   (废弃)bool对象,存储了是否已将MOVEMENT文件信息分别存储到各个文件的信息
         isFeatGenned:                     (废弃)bool对象,存储了是否已经成功计算feat和dfeat的信息
         '''
-        
+
         '''
         self.cellFilePath=os.path.join(self.dir,'cell.npy')
         self.posFilePath=os.path.join(self.dir,'pos.npy')
@@ -349,10 +335,8 @@ class System():
                 if line and line.split()[-1]=='True':
                     self.isFeatGenned=True
         '''
-        if os.path.isfile(self.splittedDataFilePath):        
+        if os.path.isfile(self.splittedDataFilePath):
             pass
-            
-
 
     def saveStat(self):
         '''
@@ -385,9 +369,8 @@ class System():
             statLog.write('Feats and dFeats have been generated?         '+str(self.isFeatGenned)+'\n')
         '''
         pass
-        
 
-    def readSourceFile(self,isSaveToFile=True):
+    def readSourceFile(self, isSaveToFile=True):
         '''
         读取MOVEMENT源文件,得到体系的各种必要数据
         默认情况下,读取完之后会将得到的数据分别存储到各个文件中
@@ -418,90 +401,83 @@ class System():
         allDE:                            cp.array对象,float,numOfImages,存储整个体系中每个Image的dE的信息
         atomTypeSet:                      tuple对象,int, 存储了体系中所包含的所有原子种类的信息
         atomCountAsType:                  cp.array对象,int,长度和atomTypeSet一致,存储了对应的每种原子的数目的信息
-        '''        
+        '''
 
         with open(self.sourcePath) as sourceFile:
-            allData=sourceFile.read()
-            self.numOfImages=allData.count('Iteration')
-            self.numOfAtoms=int(allData.split()[0])
-            
+            allData = sourceFile.read()
+            self.numOfImages = allData.count('Iteration')
+            self.numOfAtoms = int(allData.split()[0])
 
+        cell = cp.zeros((3, 3))
+        pos = cp.zeros((self.numOfAtoms, 3))
+        force = cp.zeros((self.numOfAtoms, 3))
+        velocity = cp.zeros((self.numOfAtoms, 3))
+        energy = cp.zeros((self.numOfAtoms,))
 
-        
-        cell=cp.zeros((3,3))
-        pos=cp.zeros((self.numOfAtoms,3))
-        force=cp.zeros((self.numOfAtoms,3))
-        velocity=cp.zeros((self.numOfAtoms,3))
-        energy=cp.zeros((self.numOfAtoms,))
-        
-        self.atomTypeList=[]
-        self.allCell=cp.zeros((self.numOfImages,3,3))
-        self.allPos=cp.zeros((self.numOfImages,self.numOfAtoms,3))
-        self.allForce=cp.zeros((self.numOfImages,self.numOfAtoms,3))
-        self.allVelocity=cp.zeros((self.numOfImages,self.numOfAtoms,3))
-        self.allEnergy=cp.zeros((self.numOfImages,self.numOfAtoms))
-        self.allEp=cp.zeros((self.numOfImages,))
-        self.allDE=cp.zeros((self.numOfImages,))
-        
+        self.atomTypeList = []
+        self.allCell = cp.zeros((self.numOfImages, 3, 3))
+        self.allPos = cp.zeros((self.numOfImages, self.numOfAtoms, 3))
+        self.allForce = cp.zeros((self.numOfImages, self.numOfAtoms, 3))
+        self.allVelocity = cp.zeros((self.numOfImages, self.numOfAtoms, 3))
+        self.allEnergy = cp.zeros((self.numOfImages, self.numOfAtoms))
+        self.allEp = cp.zeros((self.numOfImages,))
+        self.allDE = cp.zeros((self.numOfImages,))
 
         with open(self.sourcePath) as sourceFile:
-            
-            line=sourceFile.readline()
-            
+
+            line = sourceFile.readline()
+
             for indexOfImage in range(self.numOfImages):
 
-                self.allEp[indexOfImage]=float(line.split()[-2])
+                self.allEp[indexOfImage] = float(line.split()[-2])
                 while not "Lattice vector" in line:
-                    line=sourceFile.readline()
-                tempList=[]
+                    line = sourceFile.readline()
+                tempList = []
                 for i in range(3):
                     tempList.append(sourceFile.readline().split()[:3])
-                cell=cp.array(np.array(tempList).astype('float64'))
-                self.allCell[indexOfImage]=cp.array(np.array(tempList).astype('float64'))
+                cell = cp.array(np.array(tempList).astype('float64'))
+                self.allCell[indexOfImage] = cp.array(np.array(tempList).astype('float64'))
 
                 while not "Position" in line:
-                    line=sourceFile.readline()
-                tempList=[]                
-                if indexOfImage==0:
+                    line = sourceFile.readline()
+                tempList = []
+                if indexOfImage == 0:
                     for i in range(self.numOfAtoms):
-                        L=sourceFile.readline().split()
+                        L = sourceFile.readline().split()
                         self.atomTypeList.append(int(L[0]))
                         tempList.append(L[1:4])
                 else:
                     for i in range(self.numOfAtoms):
-                        L=sourceFile.readline().split()
+                        L = sourceFile.readline().split()
                         tempList.append(L[1:4])
-                pos=cp.array(np.array(tempList).astype('float64'))
-                self.allPos[indexOfImage]=cp.array(np.array(tempList).astype('float64'))
+                pos = cp.array(np.array(tempList).astype('float64'))
+                self.allPos[indexOfImage] = cp.array(np.array(tempList).astype('float64'))
                 sourceFile.readline()
-                tempList=[]
+                tempList = []
                 for i in range(self.numOfAtoms):
                     tempList.append(sourceFile.readline().split()[1:4])
-                force=cp.array(np.array(tempList).astype('float64'))
-                self.allForce[indexOfImage]=cp.array(np.array(tempList).astype('float64'))
-
+                force = cp.array(np.array(tempList).astype('float64'))
+                self.allForce[indexOfImage] = cp.array(np.array(tempList).astype('float64'))
 
                 sourceFile.readline()
-                tempList=[]
+                tempList = []
                 for i in range(self.numOfAtoms):
                     tempList.append(sourceFile.readline().split()[1:4])
-                velocity=cp.array(np.array(tempList).astype('float64'))
-                self.allVelocity[indexOfImage]=cp.array(np.array(tempList).astype('float64'))
-                
+                velocity = cp.array(np.array(tempList).astype('float64'))
+                self.allVelocity[indexOfImage] = cp.array(np.array(tempList).astype('float64'))
 
-                line=sourceFile.readline()                
-                self.allDE[indexOfImage]=float(line.split()[-1])
-                tempList=[]
+                line = sourceFile.readline()
+                self.allDE[indexOfImage] = float(line.split()[-1])
+                tempList = []
                 for i in range(self.numOfAtoms):
                     tempList.append(sourceFile.readline().split()[1:2])
-                energy=cp.array(np.squeeze(np.array(tempList).astype('float64')))
-                self.allEnergy[indexOfImage]=cp.array(np.squeeze(np.array(tempList).astype('float64')))
+                energy = cp.array(np.squeeze(np.array(tempList).astype('float64')))
+                self.allEnergy[indexOfImage] = cp.array(np.squeeze(np.array(tempList).astype('float64')))
 
                 while not "Iteration" in line and line:
-                    line=sourceFile.readline()
+                    line = sourceFile.readline()
 
-
-        self.atomTypeSet=tuple(set(self.atomTypeList))
+        self.atomTypeSet = tuple(set(self.atomTypeList))
         '''
         tempList=[]
         for item in self.atomTypeList:
@@ -509,15 +485,13 @@ class System():
                 tempList.append(item)
         self.atomTypeSet=tuple(tempList)
         '''
-        self.atomCountAsType=cp.array([self.atomTypeList.count(i) for i in self.atomTypeSet])
-            
+        self.atomCountAsType = cp.array([self.atomTypeList.count(i) for i in self.atomTypeSet])
+
         if isSaveToFile:
             self.saveSplittedData()
-            #self.isDataSplitted=True
-            #self.saveStat()
+            # self.isDataSplitted=True
+            # self.saveStat()
 
-                    
-                
     def saveSplittedData(self):
         ''' 
         (此存储法已废弃)
@@ -574,11 +548,10 @@ class System():
             otherInfo.write(str(self.atomTypeSet)[1:-1]+'\n')
             otherInfo.write(str(self.atomCountAsType)[1:-1]+'\n')
         '''
-        allData=(self.allCell,self.allPos,self.allForce,self.allVelocity,self.allEnergy,self.atomTypeList,self.allDE,self.allEp,self.atomTypeSet,self.atomCountAsType)        
-        np.save(self.splittedDataFilePath,allData)
-        
-
-    
+        allData = (
+        self.allCell, self.allPos, self.allForce, self.allVelocity, self.allEnergy, self.atomTypeList, self.allDE,
+        self.allEp, self.atomTypeSet, self.atomCountAsType)
+        np.save(self.splittedDataFilePath, allData)
 
     def loadFromSplittedData(self):
         '''
@@ -656,14 +629,11 @@ class System():
             line=otherInfo.readline().rstrip()
             self.atomCountAsType=cp.array([int(i) for i in line.split()])
         '''
-        self.allCell,self.allPos,self.allForce,self.allVelocity,self.allEnergy,self.atomTypeList,self.allDE,self.allEp,self.atomTypeSet,self.atomCountAsType=np.load(self.splittedDataFilePath,None,True)
-        self.numOfImages=self.allPos.shape[0]
-        self.numOfAtoms=self.allPos.shape[1]
-            
-        
-        
+        self.allCell, self.allPos, self.allForce, self.allVelocity, self.allEnergy, self.atomTypeList, self.allDE, self.allEp, self.atomTypeSet, self.atomCountAsType = np.load(
+            self.splittedDataFilePath, None, True)
+        self.numOfImages = self.allPos.shape[0]
+        self.numOfAtoms = self.allPos.shape[1]
 
-        
     def checkCell(self):
         '''
         检查体系计算时,超胞是否不变,
@@ -688,45 +658,43 @@ class System():
         isOrthogonalCell:                 bool对象,存储了整个体系中cell是否是’不变且是三个方向基矢两两互相垂直’的信息
         isCheckSupercell:                 bool对象,存储了是否需要在后续计算近邻结构信息时考虑更大的超胞里有两个相同位置的原子在同一个原子近邻的情况的信息
         '''
-        if hasattr(self,'isCheckSupercell'):
+        if hasattr(self, 'isCheckSupercell'):
             return
         self.loadData()
-        self.isConstantCell=(self.allCell.max(axis=0)==self.allCell.min(axis=0)).all()
-        self.isOrthogonalCell=False
-        self.isCheckSupercell=True
-        cosAng=cp.zeros((3,))
-        #sinAng=cp.zeros((3,))
-        #areaVect=cp.zeros((3,))
-        #self.heightVect=cp.zeros((3))
+        self.isConstantCell = (self.allCell.max(axis=0) == self.allCell.min(axis=0)).all()
+        self.isOrthogonalCell = False
+        self.isCheckSupercell = True
+        cosAng = cp.zeros((3,))
+        # sinAng=cp.zeros((3,))
+        # areaVect=cp.zeros((3,))
+        # self.heightVect=cp.zeros((3))
         if self.isConstantCell:
-            latticeConstants=cp.linalg.norm(self.allCell[0],axis=1)
-            volume=cp.abs(cp.linalg.det(self.allCell[0]))
-            idx0=cp.arange(3)
-            idxm=(idx0-1)%3
-            idxp=(idx0+1)%3
-            cosAng[idx0]=cp.sum(self.allCell[0,idxm]*self.allCell[0,idxp],axis=1)/(latticeConstants[idxm]*latticeConstants[idxp])
+            latticeConstants = cp.linalg.norm(self.allCell[0], axis=1)  # 晶格常数 求范数
+            volume = cp.abs(cp.linalg.det(self.allCell[0]))  # 矩阵求行列式
+            idx0 = cp.arange(3)
+            idxm = (idx0 - 1) % 3
+            idxp = (idx0 + 1) % 3
+            cosAng[idx0] = cp.sum(self.allCell[0, idxm] * self.allCell[0, idxp], axis=1) / (
+                        latticeConstants[idxm] * latticeConstants[idxp])
             '''
             cosAng[0]=cp.sum(self.allCell[0][1]*self.allCell[0][2])/latticeConstants[1]/latticeConstants[2]
             cosAng[1]=cp.sum(self.allCell[0][0]*self.allCell[0][2])/latticeConstants[0]/latticeConstants[2]
             cosAng[2]=cp.sum(self.allCell[0][1]*self.allCell[0][0])/latticeConstants[1]/latticeConstants[0]
             '''
-            sinAng=cp.sqrt(1.0-cosAng*cosAng)
-            areaVect=latticeConstants[idxm]*latticeConstants[idxp]*sinAng[idx0]
+            sinAng = cp.sqrt(1.0 - cosAng * cosAng)
+            areaVect = latticeConstants[idxm] * latticeConstants[idxp] * sinAng[idx0]
             '''
             areaVect[0]=latticeConstants[1]*latticeConstants[2]*sinAng[0]
             areaVect[1]=latticeConstants[0]*latticeConstants[2]*sinAng[1]
             areaVect[2]=latticeConstants[1]*latticeConstants[0]*sinAng[2]
             '''
-            self.heightVect=volume/areaVect
-        if abs(cosAng).max()<0.0001:
-            self.isOrthogonalCell=True
-        if self.heightVect.min()>pm.rCut*2.0:
-            self.isCheckSupercell=False
-        
-        
-        
+            self.heightVect = volume / areaVect
+        if abs(cosAng).max() < 0.0001:
+            self.isOrthogonalCell = True
+        if self.heightVect.min() > pm.rCut * 2.0:
+            self.isCheckSupercell = False
 
-    def checkEtot(self,dEErrorLimit=pm.dEErrorLimit):
+    def checkEtot(self, dEErrorLimit=pm.dEErrorLimit):
         '''
         检查各个image的Ep和各个原子的能量和之差dE是否起伏很大
         若起伏小于固定值,则认为这个image是合格的,可以纳入计算
@@ -748,16 +716,15 @@ class System():
         goodImageIndices:                 cp.array对象,int类型,一维,存储了所有dE/self.numOfAtoms不超过pm.dEErrorLimit的Image的编号,是后续可以用于计算的Image的编号
         self.goodImageNum                 int对象，self.goodImageIndices的长度，即good images的数量
         '''
-        if hasattr(self,'goodImageIndices'):
+        if hasattr(self, 'goodImageIndices'):
             return
         self.loadData()
-        self.meanEtotError=cp.mean(self.allDE)
-        self.goodImageIndices=cp.where(cp.abs(self.allDE-self.meanEtotError)/self.numOfAtoms<dEErrorLimit)[0]
-        self.goodImageNum=len(self.goodImageIndices)
+        self.meanEtotError = cp.mean(self.allDE)
+        self.goodImageIndices = cp.where(cp.abs(self.allDE - self.meanEtotError) / self.numOfAtoms < dEErrorLimit)[0]
+        self.goodImageNum = len(self.goodImageIndices)
         return self.goodImageNum
 
-
-    def getGoodImageNum(self,dEErrorLimit=pm.dEErrorLimit):
+    def getGoodImageNum(self, dEErrorLimit=pm.dEErrorLimit):
         '''
         返回self.goodImageNum,也就是system中好的image的个数
 
@@ -777,14 +744,13 @@ class System():
         meanEtotError:                    1 cp.array对象,存储了所有Image的dE的均值
         goodImageIndices:                 cp.array对象,int类型,一维,存储了所有dE/self.numOfAtoms不超过pm.dEErrorLimit的Image的编号,是后续可以用于计算的Image的编号
         self.goodImageNum                 int对象，self.goodImageIndices的长度，即good images的数量
-        '''        
-        if hasattr(self,'goodImageNum'):
+        '''
+        if hasattr(self, 'goodImageNum'):
             return self.goodImageNum
         else:
             return self.checkEtot(dEErrorLimit)
 
-
-    def splitTrainAndTest(self,testRate=pm.testRate):
+    def splitTrainAndTest(self, testRate=pm.testRate):
         '''
         返回self.goodImageNum,也就是system中好的image的个数
 
@@ -811,15 +777,13 @@ class System():
         goodImageIndices:                 cp.array对象,int类型,一维,存储了所有dE/self.numOfAtoms不超过pm.dEErrorLimit的Image的编号,是后续可以用于计算的Image的编号
         self.goodImageNum                 int对象，self.goodImageIndices的长度，即good images的数量
         '''
-        testImageNum=self.getGoodImageNum()*testRate
-        meshGoodImageIndices=self.goodImageIndices.copy()
+        testImageNum = self.getGoodImageNum() * testRate
+        meshGoodImageIndices = self.goodImageIndices.copy()
         cp.random.shuffle(meshGoodImageIndices)
-        self.testImageIndices=meshGoodImageIndices[:testImageNum]
-        self.trainImageIndices=meshGoodImageIndices[testImageNum:]
-        
+        self.testImageIndices = meshGoodImageIndices[:testImageNum]
+        self.trainImageIndices = meshGoodImageIndices[testImageNum:]
 
-
-    def calMaxNeighborNum(self,isSaveStructData=False):
+    def calMaxNeighborNum(self, isSaveStructData=False):
         '''
         calMaxNeighborNum([isSaveStructData(bool)]) => int
         
@@ -843,41 +807,39 @@ class System():
         maxNeighborNum:                    int对象,体系的最大近邻原子数
         featMaxNeighborNum:                dict对象,str对象->int对象,该system计算feat/dfeat时所使用的pm.maxNeighborNum(key值分别为'T'—txt feat,'C'-c bin feat,'F'-f bin feat,'DC'-c bin dfeat,'DF'-f bin dfeat)
         '''
-        self.featMaxNeighborNum={'T':0,'C':0,'F':0,'DC':0,'DF':0}
-        if os.path.isfile(self.maxNeighborInfoPath) and os.stat(self.maxNeighborInfoPath).st_mtime > os.stat(self.sourcePath).st_mtime:
-            with open(self.maxNeighborInfoPath,'r') as infoFile:
-                line=infoFile.readline().rstrip().split()
-                if float(line[0])!=pm.rCut:
+        self.featMaxNeighborNum = {'T': 0, 'C': 0, 'F': 0, 'DC': 0, 'DF': 0}
+        if os.path.isfile(self.maxNeighborInfoPath) and os.stat(self.maxNeighborInfoPath).st_mtime > os.stat(
+                self.sourcePath).st_mtime:
+            with open(self.maxNeighborInfoPath, 'r') as infoFile:
+                line = infoFile.readline().rstrip().split()
+                if float(line[0]) != pm.rCut:
                     os.remove(self.maxNeighborInfoPath)
                     return self.calMaxNeighborNum(isSaveStructData)
-                self.maxNeighborNum=int(line[-1])
-                line=infoFile.readline().rstrip()
+                self.maxNeighborNum = int(line[-1])
+                line = infoFile.readline().rstrip()
                 if line:
-                    line=line.split()
-                    self.featMaxNeighborNum['T']=int(line[0])
-                    self.featMaxNeighborNum['C']=int(line[1])
-                    self.featMaxNeighborNum['F']=int(line[2])
-                    self.featMaxNeighborNum['DC']=int(line[3])
-                    self.featMaxNeighborNum['DF']=int(line[4])
+                    line = line.split()
+                    self.featMaxNeighborNum['T'] = int(line[0])
+                    self.featMaxNeighborNum['C'] = int(line[1])
+                    self.featMaxNeighborNum['F'] = int(line[2])
+                    self.featMaxNeighborNum['DC'] = int(line[3])
+                    self.featMaxNeighborNum['DF'] = int(line[4])
         else:
-            
+
             self.checkEtot()
-            maxNeighborNum=0
+            maxNeighborNum = 0
             for index in self.goodImageIndices:
-                maxNeighborNum=max(maxNeighborNum,self[int(index)].getMaxNeighborNum(isSaveStructData))  #cp.array对象自动迭代时取出的对象也是cp.array对象,维度降低一维
-                                                                                                         #即便用索引取出的对象也是cp.array对象,所以特别需要注意,np.array类似,
-                                                                                                         #不过似乎不影响cp或者np内部的绝大部分应用场合,如判断,指标,但和list等混用不行
-            self.maxNeighborNum=maxNeighborNum
-            with open(self.maxNeighborInfoPath,'w') as infoFile:
-                infoFile.write(str(pm.rCut)+' '+str(self.maxNeighborNum)+'\n')
-        
-        
-        
-            
+                maxNeighborNum = max(maxNeighborNum, self[int(index)].getMaxNeighborNum(
+                    isSaveStructData))  # cp.array对象自动迭代时取出的对象也是cp.array对象,维度降低一维
+                # 即便用索引取出的对象也是cp.array对象,所以特别需要注意,np.array类似,
+                # 不过似乎不影响cp或者np内部的绝大部分应用场合,如判断,指标,但和list等混用不行
+            self.maxNeighborNum = maxNeighborNum
+            with open(self.maxNeighborInfoPath, 'w') as infoFile:
+                infoFile.write(str(pm.rCut) + ' ' + str(self.maxNeighborNum) + '\n')
+
         return self.maxNeighborNum
 
-
-    def getMaxNeighborNum(self,isSaveStructData=False):
+    def getMaxNeighborNum(self, isSaveStructData=False):
         '''
         手动写的获取maxNeighborNum这个attr的get方法
 
@@ -897,11 +859,10 @@ class System():
         maxNeighborNum:                    int对象,体系的最大近邻原子数
         featMaxNeighborNum:                dict对象,str对象->int对象,该system计算feat/dfeat时所使用的pm.maxNeighborNum(key值分别为'T'—txt feat,'C'-c bin feat,'F'-f bin feat,'DC'-c bin dfeat,'DF'-f bin dfeat)  
         '''
-        if hasattr(self,'maxNeighborNum'):
+        if hasattr(self, 'maxNeighborNum'):
             return self.maxNeighborNum
         else:
             return self.calMaxNeighborNum()
-    
 
     def calAtomCategoryDict(self):
         '''
@@ -924,13 +885,12 @@ class System():
         atomCategoryDict:                    dict对象,int(原子种类) : cp.array(在体系所有原子中,属于该种原子(key)的所有原子的序号列表)
         '''
         self.loadData()
-        self.atomCategoryDict={}
+        self.atomCategoryDict = {}
         for atomType in pm.atomTypeSet:
-            #self.atomCategoryDict[atomType]=cp.array([i for i in range(self.numOfAtoms) if self.atomTypeList[i]==atomType])
-            self.atomCategoryDict[atomType]=cp.where(cp.array(self.atomTypeList)==atomType)[0]
+            # self.atomCategoryDict[atomType]=cp.array([i for i in range(self.numOfAtoms) if self.atomTypeList[i]==atomType])
+            self.atomCategoryDict[atomType] = cp.where(cp.array(self.atomTypeList) == atomType)[0]
 
-
-    def saveFeats(self,featSaveForm='T',isAllNew=False):
+    def saveFeats(self, featSaveForm='T', isAllNew=False):
         '''
         此方法计算该system的所有feat，并以featSaveForm指定的方式存储
         featSaveForm取值的意义：
@@ -956,70 +916,75 @@ class System():
 
         None
         '''
-        featSaveForm=featSaveForm.upper()
-        #self.calMaxNeighborNum()
-        if self.featMaxNeighborNum[featSaveForm]==pm.maxNeighborNum and (not isAllNew) and os.path.isfile(self.featFilePathDict[featSaveForm]) \
-            and os.stat(self.featFilePathDict[featSaveForm]).st_mtime>os.stat(self.sourcePath).st_mtime:            
+        featSaveForm = featSaveForm.upper()
+        # self.calMaxNeighborNum()
+        if self.featMaxNeighborNum[featSaveForm] == pm.maxNeighborNum and (not isAllNew) and os.path.isfile(
+                self.featFilePathDict[featSaveForm]) \
+                and os.stat(self.featFilePathDict[featSaveForm]).st_mtime > os.stat(self.sourcePath).st_mtime:
             return
-        #self.checkEtot()
+        # self.checkEtot()
         self.checkCell()
-        self.splitTrainAndTest()        
-        if featSaveForm=='T':
-            #testImageIndices=cp.random.choice(self.goodImageIndices,int(len(self.goodImageIndices)*0.2))
+        self.splitTrainAndTest()
+        if featSaveForm == 'T':
+            # testImageIndices=cp.random.choice(self.goodImageIndices,int(len(self.goodImageIndices)*0.2))
             for index in self.goodImageIndices:
-                aImage=self[int(index)]
-                feat=aImage.calFeat()
-                out=np.concatenate((np.expand_dims(cp.asnumpy(self.atomTypeList),1),np.expand_dims(cp.asnumpy(aImage.energy),1),feat),axis=1)
-                df_out=pd.DataFrame(out)
+                aImage = self[int(index)]
+                feat = aImage.calFeat()
+                out = np.concatenate((np.expand_dims(cp.asnumpy(self.atomTypeList), 1),
+                                      np.expand_dims(cp.asnumpy(aImage.energy), 1), feat), axis=1)
+                df_out = pd.DataFrame(out)
                 if index in self.trainImageIndices:
                     df_out.to_csv(pm.featTrainTxt, mode='a', header=False)
                 else:
                     df_out.to_csv(pm.featTestTxt, mode='a', header=False)
         else:
-            with open(self.featInfoTxtPath,'w') as featInfo:
-                featInfo.write('Number of  good images:   '+str(len(self.goodImageIndices))+'\n')
-                featInfo.write('Number of atoms:    '+str(self.numOfAtoms)+'\n')
-                featInfo.write('Number of real Feats:   '+str(pm.realFeatNum)+'\n')
-                featInfo.write('Maxium of neighbor atoms:   '+str(pm.maxNeighborNum)+'\n')
-                featInfo.write('Number of bytes of a image in file:   '+str(8*(self.numOfAtoms+self.numOfAtoms*pm.realFeatNum))+'\n')
+            with open(self.featInfoTxtPath, 'w') as featInfo:
+                featInfo.write('Number of  good images:   ' + str(len(self.goodImageIndices)) + '\n')
+                featInfo.write('Number of atoms:    ' + str(self.numOfAtoms) + '\n')
+                featInfo.write('Number of real Feats:   ' + str(pm.realFeatNum) + '\n')
+                featInfo.write('Maxium of neighbor atoms:   ' + str(pm.maxNeighborNum) + '\n')
+                featInfo.write('Number of bytes of a image in file:   ' + str(
+                    8 * (self.numOfAtoms + self.numOfAtoms * pm.realFeatNum)) + '\n')
                 featInfo.write('AtomTypeList:\n')
                 featInfo.write(str(self.atomTypeList)[1:-1])
                 featInfo.write('All indices of good images:\n')
                 featInfo.write(str(self.goodImageIndices)[1:-1])
-            if featSaveForm=='C':
-                with open(self.featFilePathDict['C'],'wb') as binFile:
+            if featSaveForm == 'C':
+                with open(self.featFilePathDict['C'], 'wb') as binFile:
                     for index in self.goodImageIndices:
-                        aImage=self[int(index)]
+                        aImage = self[int(index)]
                         '''
                         energy=cp.ascontiguousarray(aImage.energy)
                         energy=cp.asnumpy(energy)
                         binFile.write(energy)
                         '''
-                        feat=aImage.calFeat()
+                        feat = aImage.calFeat()
                         binFile.write(feat.tobytes())
-            elif featSaveForm=='F':
-                with open(self.featFilePathDict['F'],'wb') as binFile:
-                    infoArray=cp.array((self.goodImageNum,self.numOfAtoms,pm.realFeatNum),cp.int32)
+            elif featSaveForm == 'F':
+                with open(self.featFilePathDict['F'], 'wb') as binFile:
+                    infoArray = cp.array((self.goodImageNum, self.numOfAtoms, pm.realFeatNum), cp.int32)
                     binFile.write(infoArray.tobytes())
-                    binFile.write(cp.array(self.atomTypeList,cp.int32).tobytes())
+                    binFile.write(cp.array(self.atomTypeList, cp.int32).tobytes())
                     for index in self.goodImageIndices:
-                        aImage=self[int(index)]
+                        aImage = self[int(index)]
                         '''
                         energy=cp.asfortranarray(aImage.energy)
                         energy=cp.asnumpy(energy)
                         binFile.write(energy)
                         '''
                         binFile.write(aImage.energy.tobytes())
-                        feat=aImage.calFeat()
+                        feat = aImage.calFeat()
                         binFile.write(feat.tobytes())
 
-        self.featMaxNeighborNum[featSaveForm]=pm.maxNeighborNum
-        with open(self.maxNeighborInfoPath,'w') as infoFile:
-            infoFile.write(str(pm.rCut)+' '+str(self.maxNeighborNum)+'\n')
-            line=str(self.featMaxNeighborNum['T'])+'  '+str(self.featMaxNeighborNum['C'])+'  '+str(self.featMaxNeighborNum['F'])+'  '+str(self.featMaxNeighborNum['DC'])+'  '+str(self.featMaxNeighborNum['DF'])+'\n'
+        self.featMaxNeighborNum[featSaveForm] = pm.maxNeighborNum
+        with open(self.maxNeighborInfoPath, 'w') as infoFile:
+            infoFile.write(str(pm.rCut) + ' ' + str(self.maxNeighborNum) + '\n')
+            line = str(self.featMaxNeighborNum['T']) + '  ' + str(self.featMaxNeighborNum['C']) + '  ' + str(
+                self.featMaxNeighborNum['F']) + '  ' + str(self.featMaxNeighborNum['DC']) + '  ' + str(
+                self.featMaxNeighborNum['DF']) + '\n'
             infoFile.write(line)
 
-    def saveFeatAndDfeats(self,featSaveForm='C'):
+    def saveFeatAndDfeats(self, featSaveForm='C'):
         '''
         此方法计算该system的所有feat和dfeat，并以featSaveForm和dfeatSaveForm指定的方式存储
         
@@ -1050,61 +1015,69 @@ class System():
 
         None
         '''
-        featSaveForm=featSaveForm.upper()
-        dfeatSaveForm='D'+featSaveForm
-        #self.calMaxNeighborNum()
-        isFeatNew=not(self.featMaxNeighborNum[featSaveForm]==pm.maxNeighborNum and os.path.isfile(self.featFilePathDict[featSaveForm]) and os.stat(self.featFilePathDict[featSaveForm]).st_mtime>os.stat(self.sourcePath).st_mtime)
-        isDfeatNew=not(self.featMaxNeighborNum[dfeatSaveForm]==pm.maxNeighborNum and os.path.isfile(self.featFilePathDict[dfeatSaveForm]) and os.stat(self.featFilePathDict[dfeatSaveForm]).st_mtime>os.stat(self.sourcePath).st_mtime)
+        featSaveForm = featSaveForm.upper()
+        dfeatSaveForm = 'D' + featSaveForm
+        # self.calMaxNeighborNum()
+        isFeatNew = not (self.featMaxNeighborNum[featSaveForm] == pm.maxNeighborNum and os.path.isfile(
+            self.featFilePathDict[featSaveForm]) and os.stat(self.featFilePathDict[featSaveForm]).st_mtime > os.stat(
+            self.sourcePath).st_mtime)
+        isDfeatNew = not (self.featMaxNeighborNum[dfeatSaveForm] == pm.maxNeighborNum and os.path.isfile(
+            self.featFilePathDict[dfeatSaveForm]) and os.stat(self.featFilePathDict[dfeatSaveForm]).st_mtime > os.stat(
+            self.sourcePath).st_mtime)
         if (not isFeatNew) and (not isDfeatNew):
             return
-        
-        self.checkEtot()        
+
+        self.checkEtot()
         self.checkCell()
-        featSaveForm=featSaveForm.upper()
-        dfeatSaveFomr=dfeatSaveForm.upper()
-        with open(self.featInfoTxtPath,'w') as featInfo:
-            featInfo.write('Number of  good images:   '+str(len(self.goodImageIndices))+'\n')
-            featInfo.write('Number of atoms:    '+str(self.numOfAtoms)+'\n')
-            featInfo.write('Number of real Feats:   '+str(pm.realFeatNum)+'\n')
-            featInfo.write('Maxium of neighbor atoms:   '+str(pm.maxNeighborNum)+'\n')
-            featInfo.write('Number of bytes of a image in file:   '+str(8*(self.numOfAtoms*3+self.numOfAtoms*(1+pm.maxNeighborNum)*pm.realFeatNum))+'\n')
+        featSaveForm = featSaveForm.upper()
+        dfeatSaveFomr = dfeatSaveForm.upper()
+        with open(self.featInfoTxtPath, 'w') as featInfo:
+            featInfo.write('Number of  good images:   ' + str(len(self.goodImageIndices)) + '\n')
+            featInfo.write('Number of atoms:    ' + str(self.numOfAtoms) + '\n')
+            featInfo.write('Number of real Feats:   ' + str(pm.realFeatNum) + '\n')
+            featInfo.write('Maxium of neighbor atoms:   ' + str(pm.maxNeighborNum) + '\n')
+            featInfo.write('Number of bytes of a image in file:   ' + str(
+                8 * (self.numOfAtoms * 3 + self.numOfAtoms * (1 + pm.maxNeighborNum) * pm.realFeatNum)) + '\n')
             featInfo.write('AtomTypeList:\n')
             featInfo.write(str(self.atomTypeList)[1:-1])
             featInfo.write('All indices of good images:\n')
             featInfo.write(str(self.goodImageIndices)[1:-1])
-        featFileOpenForm='rb'
-        dfeatFileOpenForm='rb'
+        featFileOpenForm = 'rb'
+        dfeatFileOpenForm = 'rb'
         if isFeatNew:
-            featFileOpenForm='wb'
+            featFileOpenForm = 'wb'
         if isDfeatNew:
-            dfeatFileOpenForm='wb'
-        if featSaveForm=='C':
-            with open(self.featFilePathDict['C'],featFileOpenForm) as featBinFile,open(self.featFilePathDict['DC'],dfeatFileOpenForm) as dfeatBinFile:
+            dfeatFileOpenForm = 'wb'
+        if featSaveForm == 'C':
+            with open(self.featFilePathDict['C'], featFileOpenForm) as featBinFile, open(self.featFilePathDict['DC'],
+                                                                                         dfeatFileOpenForm) as dfeatBinFile:
                 for index in self.goodImageIndices:
-                    aImage=self[int(index)]
+                    aImage = self[int(index)]
                     '''
                     energy=cp.ascontiguousarray(aImage.energy)
                     energy=cp.asnumpy(energy)
                     binFile.write(energy)
                     '''
                     if isFeatNew:
-                        feat=aImage.calFeat()
+                        feat = aImage.calFeat()
                         featBinFile.write(feat.tobytes())
                     if isDfeatNew:
-                        dfeat=aImage.calDfeat()
-                        dfeatBinFile.write(dfeat.tobytes())                    
-        elif featSaveForm=='F':
-            with open(self.featFilePathDict['F'],featFileOpenForm) as featBinFile,open(self.featFilePathDict['DF'],dfeatFileOpenForm) as dfeatBinFile:
+                        dfeat = aImage.calDfeat()
+                        dfeatBinFile.write(dfeat.tobytes())
+        elif featSaveForm == 'F':
+            with open(self.featFilePathDict['F'], featFileOpenForm) as featBinFile, open(self.featFilePathDict['DF'],
+                                                                                         dfeatFileOpenForm) as dfeatBinFile:
                 if isFeatNew:
-                    infoArray=cp.array((self.goodImageNum,self.numOfAtoms,pm.realFeatNum),cp.int32)
+                    infoArray = cp.array((self.goodImageNum, self.numOfAtoms, pm.realFeatNum), cp.int32)
                     featBinFile.write(infoArray.tobytes())
-                    featBinFile.write(cp.array(self.atomTypeList,cp.int32).tobytes())
+                    featBinFile.write(cp.array(self.atomTypeList, cp.int32).tobytes())
                 if isDfeatNew:
-                    infoArray=cp.array((self.goodImageNum,self.numOfAtoms,pm.realFeatNum,pm.maxNeighborNum+1),cp.int32)
+                    infoArray = cp.array((self.goodImageNum, self.numOfAtoms, pm.realFeatNum, pm.maxNeighborNum + 1),
+                                         cp.int32)
                     dfeatBinFile.write(infoArray.tobytes())
-                    dfeatBinFile.write(cp.array(self.atomTypeList,cp.int32).tobytes())
+                    dfeatBinFile.write(cp.array(self.atomTypeList, cp.int32).tobytes())
                 for index in self.goodImageIndices:
-                    aImage=self[int(index)]
+                    aImage = self[int(index)]
                     '''
                     energy=cp.ascontiguousarray(aImage.energy)
                     energy=cp.asnumpy(energy)
@@ -1112,39 +1085,31 @@ class System():
                     '''
                     if isFeatNew:
                         featBinFile.write(aImage.energy.tobytes())
-                        feat=aImage.calFeat()
+                        feat = aImage.calFeat()
                         featBinFile.write(feat.tobytes())
                     if isDfeatNew:
                         dfeatBinFile.write(aImage.energy.tobytes())
-                        force=aImage.force
+                        force = aImage.force
                         dfeatBinFile.write(force.tobytes())
-                        feat=aImage.calFeat()
+                        feat = aImage.calFeat()
                         dfeatBinFile.write(feat.tobytes())
-                        dfeatBinFile.write((aImage.neighborNumOfAllAtoms+1).astype(cp.int32).tobytes())
-                        neighborList=(aImage.neighborListOfAllAtoms+1).astype(cp.int32)
+                        dfeatBinFile.write((aImage.neighborNumOfAllAtoms + 1).astype(cp.int32).tobytes())
+                        neighborList = (aImage.neighborListOfAllAtoms + 1).astype(cp.int32)
                         dfeatBinFile.write(neighborList.tobytes())
-                        
-                        dfeat=aImage.calDfeat().transpose(3,1,0,2)
-                        dfeatBinFile.write(dfeat.tobytes()) 
 
-        self.featMaxNeighborNum[featSaveForm]=pm.maxNeighborNum
-        self.featMaxNeighborNum[dfeatSaveForm]=pm.maxNeighborNum
-        with open(self.maxNeighborInfoPath,'w') as infoFile:
-            infoFile.write(str(pm.rCut)+' '+str(self.maxNeighborNum)+'\n')
-            line=str(self.featMaxNeighborNum['T'])+'  '+str(self.featMaxNeighborNum['C'])+'  '+str(self.featMaxNeighborNum['F'])+'  '+str(self.featMaxNeighborNum['DC'])+'  '+str(self.featMaxNeighborNum['DF'])+'\n'
+                        dfeat = aImage.calDfeat().transpose(3, 1, 0, 2)
+                        dfeatBinFile.write(dfeat.tobytes())
+
+        self.featMaxNeighborNum[featSaveForm] = pm.maxNeighborNum
+        self.featMaxNeighborNum[dfeatSaveForm] = pm.maxNeighborNum
+        with open(self.maxNeighborInfoPath, 'w') as infoFile:
+            infoFile.write(str(pm.rCut) + ' ' + str(self.maxNeighborNum) + '\n')
+            line = str(self.featMaxNeighborNum['T']) + '  ' + str(self.featMaxNeighborNum['C']) + '  ' + str(
+                self.featMaxNeighborNum['F']) + '  ' + str(self.featMaxNeighborNum['DC']) + '  ' + str(
+                self.featMaxNeighborNum['DF']) + '\n'
             infoFile.write(line)
-        
-                    
-                    
-            
 
-            
-            
-            
-    
-            
-
-    def __getitem__(self,index):
+    def __getitem__(self, index):
         '''
         __getitem__(index(int))  =>  Image对象
         运算符重载函数,使得System的实例可以像list一样用[index]的形式索引到包含的Image
@@ -1167,17 +1132,17 @@ class System():
 
         None
         '''
-        self.loadData()                  #此句只适宜在调试阶段使用,正式阶段不应该使用之，不过不影响结果
-        self.checkCell()                 #此句只适宜在调试阶段使用,正式阶段不应该使用之，不过不影响结果
-        if isinstance(index,int):
-            return Image(self.atomTypeList,self.allCell[index],self.allPos[index],self.isOrthogonalCell,self.isCheckSupercell,\
-                   self.atomTypeSet,self.atomCountAsType,self.atomCategoryDict,self.allForce[index],self.allEnergy[index],\
-                   self.allVelocity[index],self.allEp[index],self.allDE[index],self.basicFuncVect,self,index)
+        self.loadData()  # 此句只适宜在调试阶段使用,正式阶段不应该使用之，不过不影响结果
+        self.checkCell()  # 此句只适宜在调试阶段使用,正式阶段不应该使用之，不过不影响结果
+        if isinstance(index, int):
+            return Image(self.atomTypeList, self.allCell[index], self.allPos[index], self.isOrthogonalCell,
+                         self.isCheckSupercell, \
+                         self.atomTypeSet, self.atomCountAsType, self.atomCategoryDict, self.allForce[index],
+                         self.allEnergy[index], \
+                         self.allVelocity[index], self.allEp[index], self.allDE[index], self.basicFuncVect, self, index)
         else:
             raise IndexError('Now System obj just support int index!')
-        
 
 
-    
-if __name__=='__main__':
+if __name__ == '__main__':
     input('Press Enter to quit test:')

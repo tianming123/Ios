@@ -116,7 +116,8 @@ class AtomUtils:
                         for i in range(1,len(lis.contents)):
                             info += lis.contents[i].string
                         list.append(info[1:])
-
+            for i in range(len(list)):
+                list[i] = list[i].strip()
             result.append(list)
             print(list)
 
