@@ -808,6 +808,7 @@ class System():
         featMaxNeighborNum:                dict对象,str对象->int对象,该system计算feat/dfeat时所使用的pm.maxNeighborNum(key值分别为'T'—txt feat,'C'-c bin feat,'F'-f bin feat,'DC'-c bin dfeat,'DF'-f bin dfeat)
         '''
         self.featMaxNeighborNum = {'T': 0, 'C': 0, 'F': 0, 'DC': 0, 'DF': 0}
+
         if os.path.isfile(self.maxNeighborInfoPath) and os.stat(self.maxNeighborInfoPath).st_mtime > os.stat(
                 self.sourcePath).st_mtime:
             with open(self.maxNeighborInfoPath, 'r') as infoFile:
